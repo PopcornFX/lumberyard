@@ -537,14 +537,14 @@ bool COctreeNode::DeleteObject(IRenderNode* pObj)
 
     if (m_removeVegetationCastersOneByOne)
     {
-        for (int i = 0; i < m_lstCasters.Count(); i++)
+    for (int i = 0; i < m_lstCasters.Count(); i++)
+    {
+        if (m_lstCasters[i].pNode == pObj)
         {
-            if (m_lstCasters[i].pNode == pObj)
-            {
-                m_lstCasters.Delete(i);
-                break;
-            }
+            m_lstCasters.Delete(i);
+            break;
         }
+    }
     }
 
     C3DEngine* p3DEngine = Get3DEngine();
@@ -1497,12 +1497,13 @@ void COctreeNode::GetNearestCubeProbe(float& fMinDistance, int& nMaxPriority, CL
                     Vec3 vProbeExtents = pLight->m_ProbeExtents;
                     if (fabs(vCenterOBBSpace.x) < vProbeExtents.x && fabs(vCenterOBBSpace.y) < vProbeExtents.y && fabs(vCenterOBBSpace.z) < vProbeExtents.z)
                     {
-                        if (pLight->m_nSortPriority > nMaxPriority 
+                        const float fProbeSqDistance = vCenterRel.len2();
+                        if ((pLight->m_nSortPriority > nMaxPriority || fProbeSqDistance < fMinDistance)
                             && pLight->m_fProbeAttenuation > 0) // Don't return a probe that is disabled/invisible. In particular this provides better results when lighting particles.
                         {
                             pNearestLight = (CLightEntity*)pObj;
                             nMaxPriority = pLight->m_nSortPriority;
-                            fMinDistance = 0;
+                            fMinDistance = fProbeSqDistance;
                         }
                     }
                 }
