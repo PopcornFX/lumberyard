@@ -537,14 +537,14 @@ bool COctreeNode::DeleteObject(IRenderNode* pObj)
 
     if (m_removeVegetationCastersOneByOne)
     {
-    for (int i = 0; i < m_lstCasters.Count(); i++)
-    {
-        if (m_lstCasters[i].pNode == pObj)
+        for (int i = 0; i < m_lstCasters.Count(); i++)
         {
-            m_lstCasters.Delete(i);
-            break;
+            if (m_lstCasters[i].pNode == pObj)
+            {
+                m_lstCasters.Delete(i);
+                break;
+            }
         }
-    }
     }
 
     C3DEngine* p3DEngine = Get3DEngine();
